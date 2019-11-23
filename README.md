@@ -13,7 +13,7 @@ I'm testing E-commerce shop: http://automationpractice.com/index.php
 - Forgotten password
 - Login
 
-# under development:
+# Under development:
 - Contact Us form
 - Change personal data (name etc.)
 - Change password
@@ -24,5 +24,5 @@ I'm testing E-commerce shop: http://automationpractice.com/index.php
 - Checkout -> Pay By Wire
 - Checkout -> Pay By Check
 
-All can be run locally via. test_suite.sh -> it runs all tests in consecutive order, after one is finished then next is ran.
+All can be run locally via. testsuite.py -> it runs all tests in consecutive order, after one is finished then next is ran.
 Checkout tests aren't included at current state of Test Suite, as I don't want to spam test site with orders.
