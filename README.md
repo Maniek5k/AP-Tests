@@ -6,13 +6,15 @@ This is my Python + Selenium practice repository.
 
 I'm testing E-commerce shop: http://automationpractice.com/index.php
 
-At current state following tests are available:
+# At current state following tests are available:
 
 - Search
 - Subscribe to newsletter
 - Forgotten password
-- Contact Us form
 - Login
+
+# under development:
+- Contact Us form
 - Change personal data (name etc.)
 - Change password
 - Add product to wishlist
