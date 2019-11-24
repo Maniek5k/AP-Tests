@@ -55,14 +55,23 @@ class Services:
 
         param locator: XPATH of given element
         param_type: string
+        :rtype: object
         """
+
         try:
-            self.driver.find_element_by_css_selector(locator)
+            self.driver.find_element_by_xpath(locator)
             logging.info("# Element '%s' is present." % locator)
             return True
         except NoSuchElementException:
             logging.info("# Element '%s' is not present." % locator)
             return False
+    #
+    # # def is_element_present(self, how, what):
+    #     try:
+    #         self.driver.find_element(by=how, value=what)
+    #     except NoSuchElementException:
+    #         return False
+    #     return True
 
     def assert_element_present(self, locator):
         """
