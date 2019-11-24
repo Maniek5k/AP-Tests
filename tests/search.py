@@ -1,56 +1,35 @@
-import unittest
-from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+
+import services
+
+from drivermanager import DriverManager
 
 
-class SearchTest(unittest.TestCase):
+class SearchTest(DriverManager):
 
-    @classmethod
-    def setUp(cls):
-        # create a new Chrome session
-        cls.driver = webdriver.Chrome()
-        cls.driver.implicitly_wait(30)
-        cls.driver.maximize_window()
+    def __init__(self, driver):
+        super().__init__()
+        self.driver = driver
+        self.services = services.Services
+        self.search_input = '//*[@id="search_query_top"]'
+        self.enter = Keys.RETURN
+        self.alert_warning = 'alert-warning'
+        self.blouse = 'Blouse'
+        self.alert_success = 'alert-success'
+        self.qweqwe = 'qweqwe'
 
-        # navigate to automation practice homepage
-        cls.driver.get("http://automationpractice.com/index.php")
+    def runTest(self):
+        self.services.submit_form_by_xpath(self, self.search_input, self.qweqwe)
 
-    def test_search(self):
-        # sending search query without any search keyword
-        self.search_field = self.driver.find_element_by_xpath('//*[@id="search_query_top"]')
-        self.search_field.submit()
+        self.services.is_element_present(self, By.CLASS_NAME, self.alert_warning)
 
-        # checking for correct alert displayed
-        self.assertTrue(self.is_element_present(By.CSS_SELECTOR, 'p.alert-warning'))
+        self.services.clear_element_by_xpath(self, self.search_input)
 
-        # search for Blouse
-        self.search_field = self.driver.find_element_by_xpath('//*[@id="search_query_top"]')
-        self.search_field.send_keys("Blouse")
-        self.search_field.submit()
+        self.services.send_keys_by_xpath(self, self.search_input, self.enter)
 
-        # check if found product matches search query
-        self.product_name = self.driver.find_element_by_xpath('//*[@id="center_column"]/ul/li/div/div[2]/h5/a')
-        self.assertEqual(self.product_name.text, "Blouse")
+        self.services.is_element_present(self, By.CLASS_NAME, self.alert_warning)
 
-        # search for non existing product
-        self.search_field = self.driver.find_element_by_xpath('//*[@id="search_query_top"]')
-        self.search_field.clear()
-        self.search_field.send_keys("qweqwe")
-        self.search_field.submit()
+        self.services.submit_form_by_xpath(self, self.search_input, self.blouse)
 
-        # check for correct alert message displayed
-        self.assertTrue(self.is_element_present(By.CSS_SELECTOR, 'p.alert-warning'))
-
-    @classmethod
-    def tearDown(cls):
-        # close the browser window
-        cls.driver.quit()
-
-    # helper class for element visibility
-    def is_element_present(self, how, what):
-        try:
-            self.driver.find_element(by=how, value=what)
-        except NoSuchElementException:
-            return False
-        return True
+        self.services.is_element_present(self, By.LINK_TEXT, self.blouse)
