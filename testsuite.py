@@ -1,4 +1,4 @@
-import unittest
+import unittes
 from tests.search import SearchTest
 from tests.login import LoginTest
 from tests.newslettersubscribe import NewsletterSubscribe

@@ -1,51 +1,44 @@
 import unittest
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import TimeoutException
+
+from selenium.common.exceptions import NoSuchElementException
+
+from drivermanager import DriverManager
+from services import Services
 
 
-class LoginTest(unittest.TestCase):
+class LoginTest(DriverManager):
 
-    @classmethod
-    def setUp(cls):
-        # create a new Chrome session
-        cls.driver = webdriver.Chrome()
-        cls.driver.implicitly_wait(30)
-        cls.driver.maximize_window()
+    def __init__(self, driver):
+        super().__init__()
+        self.driver = driver
+        self.services = Services(self.driver)
+        self.login_page = 'http://automationpractice.com/index.php?controller=authentication&back=my-account'
+        self.email_address = '//*[@id="email"]'
+        self.user_email = 'emailer5k+selenium@gmail.com'
+        self.pwd_input = '//*[@id="passwd"]'
+        self.user_pwd = '12345'
+        self.submit_btn = '//*[@id="SubmitLogin"]'
+        self.heading = 'h1.page-heading'
 
-        # navigate to automation practice homepage
-        cls.driver.get("http://automationpractice.com/index.php")
-
-    def test_login(self):
+    def runTest(self):
         # going to login page
-        self.driver.get('http://automationpractice.com/index.php?controller=authentication&back=my-account')
+        self.driver.get(self.login_page)
 
         # providing login credentials
-        self.email_address = self.driver.find_element_by_xpath('//*[@id="email"]')
-        self.email_address.send_keys('emailer5k+selenium@gmail.com')
-        self.password = self.driver.find_element_by_xpath('//*[@id="passwd"]')
-        self.password.send_keys('12345')
-        self.sign_in = self.driver.find_element_by_xpath('//*[@id="SubmitLogin"]')
-        self.sign_in.click()
+        self.driver.find_element_by_xpath(self.email_address).send_keys(self.user_email)
+        self.password = self.driver.find_element_by_xpath(self.pwd_input).send_keys(self.user_pwd)
+
+        self.driver.find_element_by_xpath(self.submit_btn).click()
 
         # check if login was successful
-        self.driver.implicitly_wait(5)
-        self.account_page = self.driver.current_url
-        correct_account_page = 'http://automationpractice.com/index.php?controller=my-account'
-        timeout = 5
+
         try:
-            account_page_present = EC.presence_of_element_located((By.ID, 'center_column'))
-            WebDriverWait(self.driver, timeout).until(account_page_present)
-            self.assertEqual(self.account_page, correct_account_page)
-        except TimeoutException:
-            print("Loading took too much time!")
+            self.driver.find_element_by_css_selector(self.heading)
+            self.driver.find_element_by_css_selector('a.logout').click()
+            return True
+        except NoSuchElementException:
+            return False
 
-        # log out
-        self.log_out = self.driver.find_element_by_css_selector('a.logout')
-        self.log_out.click()
 
-    def tearDown(cls):
-        # close the browser window
-        cls.driver.quit()
+if __name__ == "__main__":
+    unittest.main()
