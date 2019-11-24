@@ -40,7 +40,6 @@ class SearchTest(unittest.TestCase):
         self.search_field.submit()
 
         # check for correct alert message displayed
-        self.alert_message = self.driver.find_element_by_xpath('//*[@id="center_column"]/p')
         self.assertTrue(self.is_element_present(By.CSS_SELECTOR, 'p.alert-warning'))
 
     @classmethod

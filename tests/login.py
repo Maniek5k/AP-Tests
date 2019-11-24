@@ -1,6 +1,7 @@
 import unittest
 
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import By
 
 from drivermanager import DriverManager
 from services import Services
@@ -18,7 +19,7 @@ class LoginTest(DriverManager):
         self.pwd_input = '//*[@id="passwd"]'
         self.user_pwd = '12345'
         self.submit_btn = '//*[@id="SubmitLogin"]'
-        self.heading = 'h1.page-heading'
+        self.heading ='//*[@id="center_column"]/h1'
 
     def runTest(self):
         # going to login page
@@ -31,14 +32,15 @@ class LoginTest(DriverManager):
         self.driver.find_element_by_xpath(self.submit_btn).click()
 
         # check if login was successful
-
+        #
+        # self.services.is_element_present(self.heading)
         try:
-            self.driver.find_element_by_css_selector(self.heading)
-            self.driver.find_element_by_css_selector('a.logout').click()
+            self.driver.find_element_by_xpath(self.heading)
+
             return True
         except NoSuchElementException:
-            return False
 
+            return False
 
 if __name__ == "__main__":
     unittest.main()
