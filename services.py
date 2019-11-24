@@ -28,6 +28,10 @@ class Services:
         logging.info("# Wait for element to appear... %s" % locator)
         WebDriverWait(self.driver, timeout).until(EC.presence_of_element_located((By.XPATH, locator)))
 
+    def send_keys_by_xpath(self, locator, keys):
+        element = self.driver.find_element_by_xpath(locator)
+        element.send_keys(keys)
+
     def assert_and_click_by_xpath(self, locator):
         """
         This method is to assert and click on the web element.
@@ -49,29 +53,12 @@ class Services:
 
         return self.driver.find_element_by_xpath(locator).text
 
-    def is_element_present(self, locator):
-        """
-        This method is to verify element is present or not.
-
-        param locator: XPATH of given element
-        param_type: string
-        :rtype: object
-        """
-
+    def is_element_present(self, selector):
         try:
-            self.driver.find_element_by_xpath(locator)
-            logging.info("# Element '%s' is present." % locator)
+            self.driver.find_element_by_xpath(selector)
             return True
         except NoSuchElementException:
-            logging.info("# Element '%s' is not present." % locator)
             return False
-    #
-    # # def is_element_present(self, how, what):
-    #     try:
-    #         self.driver.find_element(by=how, value=what)
-    #     except NoSuchElementException:
-    #         return False
-    #     return True
 
     def assert_element_present(self, locator):
         """
