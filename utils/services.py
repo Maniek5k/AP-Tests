@@ -14,6 +14,10 @@ class Services:
     def __init__(self, driver):
         self.driver = driver
 
+    def create_random_prefix(self):
+        self.prefix_created = str(random.randint(0, 99999))
+        return self.prefix_created
+
     def wait_for_element(self, locator, timeout=20):
         logging.info("# Wait for element to appear... %s" % locator)
         WebDriverWait(self.driver, timeout).until(EC.presence_of_element_located((By.XPATH, locator)))
@@ -49,9 +53,9 @@ class Services:
         except NoSuchElementException:
             return False
 
-    def assert_element_present(self, locator):
+    def assert_element_present(self, how, locator):
         logging.info("# Verifying Element is present.")
-        assert self.is_element_present_css(locator), "Element '%s' should be present." % locator
+        assert self.is_element_present(how, locator), "Element '%s' should be present." % locator
 
     def assert_element_is_not_present(self, locator):
         logging.info("# Verifying Element is not present.")
@@ -65,9 +69,9 @@ class Services:
         logging.info("# Wait for element to appear... %s" % locator)
         WebDriverWait(self.driver, timeout).until(EC.invisibility_of_element_located((By.XPATH, locator)))
 
-    def is_element_visible(self, locator):
+    def is_element_visible(self, how, locator):
         try:
-            ele = self.driver.find_element_by_xpath(locator)
+            ele = self.driver.find_element(how, locator)
             return ele.is_displayed()
         except NoSuchElementException:
             logging.info("# Element '%s' is not present." % locator)

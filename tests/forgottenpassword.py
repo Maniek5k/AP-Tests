@@ -1,64 +1,26 @@
-import unittest
-from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 
+import services
+from utils.drivermanager import DriverManager
 
-class ForgottenPassword(unittest.TestCase):
 
-    @classmethod
-    def setUp(cls):
-        # create a new Chrome session
-        cls.driver = webdriver.Chrome()
-        cls.driver.implicitly_wait(30)
-        cls.driver.maximize_window()
+class ForgotPwdTest(DriverManager):
 
-        # navigate to automation practice homepage
-        cls.driver.get("http://automationpractice.com/index.php")
+    def __init__(self, driver):
+        super().__init__()
+        self.driver = driver
+        self.services = services.Services
+        self.account_page = 'http://automationpractice.com/index.php?controller=authentication&back=my-account'
+        self.forgot_pwd_btn = 'p.lost_password > a'
+        self.forgot_pwd_input = '//*[@id="email"]'
+        self.forgot_pwd_mail = 'emailer5k+selenium@gmail.com'
+        self.forgot_pwd_alert_success = 'p.alert-success'
 
-    def test_forgotten_password(self):
-        # going to login page
-        self.driver.get('http://automationpractice.com/index.php?controller=authentication&back=my-account')
+    def runTest(self):
+        self.driver.get(self.account_page)
 
-        # clicking forgot your password link
-        self.go_to_forgotten_pwd()
+        self.services.assert_and_click(self, By.CSS_SELECTOR, self.forgot_pwd_btn)
 
-        # providing existing user email
-        self.forgot_pwd_mail = self.driver.find_element_by_xpath('//*[@id="email"]')
-        self.forgot_pwd_mail.send_keys('emailer5k+selenium@gmail.com')
-        self.forgot_pwd_mail.submit()
+        self.services.submit_form_by_xpath(self, self.forgot_pwd_input, self.forgot_pwd_mail)
 
-        # checking password recovery for existing user
-        self.assertTrue(self.is_element_present(By.CSS_SELECTOR, 'p.alert-success'))
-
-        # going back to login page
-        self.back_to_login = self.driver.find_element_by_css_selector('ul.footer_links > li > a')
-        self.back_to_login.click()
-
-        # going to forgotten password page
-        self.go_to_forgotten_pwd()
-
-        # providing non existing user email
-        self.forgot_pwd_mail = self.driver.find_element_by_xpath('//*[@id="email"]')
-        self.forgot_pwd_mail.send_keys('qweqweqweqeeqwe@gmail.com')
-        self.forgot_pwd_mail.submit()
-
-        # checking for correct alert message
-        self.assertTrue(self.is_element_present(By.CSS_SELECTOR, 'div.alert-danger'))
-
-    @classmethod
-    def tearDown(cls):
-        # close the browser window
-        cls.driver.quit()
-
-    # helper class for element visibility
-    def is_element_present(self, how, what):
-        try:
-            self.driver.find_element(by=how, value=what)
-        except NoSuchElementException:
-            return False
-        return True
-
-    def go_to_forgotten_pwd(self):
-        self.forgot_pwd = self.driver.find_element_by_link_text('Forgot your password?')
-        self.forgot_pwd.click()
+        self.services.is_element_present(self, By.CSS_SELECTOR, self.forgot_pwd_alert_success)
