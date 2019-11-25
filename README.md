@@ -12,11 +12,11 @@ I'm testing E-commerce shop: http://automationpractice.com/index.php
 - Subscribe to newsletter
 - Forgotten password
 - Login
+- Change password
 
 # Under development:
 - Contact Us form
 - Change personal data (name etc.)
-- Change password
 - Add product to wishlist
 - Create new account
 - Add new address to an existing account
