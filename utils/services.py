@@ -22,6 +22,25 @@ class Services:
         logging.info("# Wait for element to appear... %s" % locator)
         WebDriverWait(self.driver, timeout).until(EC.presence_of_element_located((By.XPATH, locator)))
 
+    def is_element_visible(self, how, locator):
+        logging.info("# Verifying Element is visible... %s" % locator)
+        try:
+            self.driver.find_element(how, locator)
+            logging.info("# Element is visible: %s" % locator)
+        except NoSuchElementException:
+            logging.error("# Element '%s' is not visible." % locator)
+            self.driver.close()
+            return False
+
+    def is_element_present_xpath(self, locator):
+        logging.info("# Verifying Element is present... %s" % locator)
+        try:
+            self.driver.find_element_by_xpath(locator)
+        except NoSuchElementException:
+            self.driver.close()
+            return False
+        return True
+
     def send_keys_by_xpath(self, locator, keys):
         logging.info("# Filling up input field... %s" % locator)
         element = self.driver.find_element_by_xpath(locator)
@@ -45,14 +64,6 @@ class Services:
     def get_text_by_xpath(self, locator):
         return self.driver.find_element_by_xpath(locator).text
 
-    def is_element_present(self, how, locator):
-        logging.info("# Verifying Element is present... %s" % locator)
-        try:
-            self.driver.find_element(how, locator)
-            return True
-        except NoSuchElementException:
-            return False
-
     def assert_element_present(self, how, locator):
         logging.info("# Verifying Element is present.")
         assert self.is_element_present(how, locator), "Element '%s' should be present." % locator
@@ -68,14 +79,6 @@ class Services:
     def wait_for_element_invisible(self, locator, timeout=20):
         logging.info("# Wait for element to appear... %s" % locator)
         WebDriverWait(self.driver, timeout).until(EC.invisibility_of_element_located((By.XPATH, locator)))
-
-    def is_element_visible(self, how, locator):
-        try:
-            ele = self.driver.find_element(how, locator)
-            return ele.is_displayed()
-        except NoSuchElementException:
-            logging.info("# Element '%s' is not present." % locator)
-        return False
 
     def assert_element_visibility(self, locator, is_visible=True):
         logging.info("# Verifying Element visibility.")
