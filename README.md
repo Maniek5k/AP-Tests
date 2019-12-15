@@ -2,7 +2,7 @@
 
 Hello
 
-This is my Python + Selenium practice repository.
+This is my Python + Selenium practice repository using unittest framework.
 
 I'm testing E-commerce shop: http://automationpractice.com/index.php
 
